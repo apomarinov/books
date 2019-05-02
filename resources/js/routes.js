@@ -13,6 +13,10 @@ export default {
         {
             path: "/favorites",
             component: require('./views/Favorites').default
+        },
+        {
+            path: "/book/:bookId",
+            component: require('./views/BookView').default
         }
     ]
 }

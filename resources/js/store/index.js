@@ -11,8 +11,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
     state: {
         books: [],
-        favorites: [],
-        book: {}
+        favorites: {}
     },
     getters,
     actions,

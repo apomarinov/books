@@ -12,7 +12,7 @@
             <p v-if="book.authors" class="has-text-centered"><strong>{{ book.authors[0] | truncate(45) }}</strong></p>
         </div>
         <div class="pt-5 pin-b h-12">
-            <rating class="pointer-events-none" :items="rating" :value="Math.floor(book.rating)"></rating>
+            <book-rating :value="Math.floor(book.rating)"></book-rating>
             <div class="fave">
                 <i slot="icon" @click="toggleFavorite" class="cursor-pointer fa fa-heart fa-2x" :class="{ 'is-fave': isFavorite }"></i>
             </div>
@@ -20,7 +20,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .fave {
         margin-top: -60px;
         margin-left: 200px;
@@ -38,7 +38,7 @@
 <script>
     import { mapActions } from 'vuex';
     import Vue2Filters from 'vue2-filters';
-    import Rating from 'vue-bulma-rating'
+    import BookRating from '../components/BookRating'
 
     export default {
         props: [
@@ -46,7 +46,7 @@
         ],
         mixins: [Vue2Filters.mixin],
         components: {
-            Rating
+            BookRating
         },
         data() {
           return {
