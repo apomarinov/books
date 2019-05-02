@@ -16,6 +16,7 @@ export default {
         },
         {
             path: "/book/:bookId",
+            name: 'bookView',
             component: require('./views/BookView').default
         }
     ]

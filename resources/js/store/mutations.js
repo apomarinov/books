@@ -11,17 +11,9 @@ export default {
         state.books = [];
     },
     addFavoriteBook(state, id) {
-        if(!state.favorites.length) {
-            state.favorites = Storage.get('favorites') || [];
-        }
-        if(state.favorites.indexOf(id) == -1) {
-            state.favorites.push(id);
-        }
+        state.favorites.add(id);
     },
     removeFavoriteBook(state, id) {
-        let bookIndex = state.favorites.indexOf(id);
-        if(bookIndex >= 0) {
-            state.favorites.splice(bookIndex, 1);
-        }
+        state.favorites.remove(id);
     }
 }

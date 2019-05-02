@@ -7,10 +7,16 @@
                 </div>
                 <img v-if="book.imageMedium" class="rounded-lg shadow-md" :src="book.imageMedium" :alt="book.title">
 
-                <div class="pt-5 pin-b h-12">
-                    <book-rating :value="Math.floor(book.rating)"></book-rating>
-                    <div class="fave">
-                        <!--<i slot="icon" @click="toggleFavorite" class="cursor-pointer fa fa-heart fa-2x" :class="{ 'is-fave': isFavorite }"></i>-->
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item mt-5">
+                            <book-rating :value="Math.floor(book.rating)"></book-rating>
+                        </div>
+                    </div>
+                    <div class="level-right">
+                        <div class="level-item">
+                            <book-fave-button :book-id="book.id"></book-fave-button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -69,6 +75,7 @@
 <script>
     import { mapActions } from 'vuex';
     import BookRating from '../components/BookRating';
+    import BookFaveButton from '../components/BookFaveButton';
 
     export default {
         data() {
@@ -80,7 +87,8 @@
             ...mapActions(['getBook'])
         },
         components: {
-            BookRating
+            BookRating,
+            BookFaveButton
         },
         created() {
             this.getBook({

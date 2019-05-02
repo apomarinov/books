@@ -11,15 +11,6 @@
 </template>
 
 <style>
-    .fave {
-        margin-top: -60px;
-        margin-left: 200px;
-    }
-
-    .is-fave {
-        color: #F05654;
-    }
-
     .slide-fade-enter-active {
         transition: all .3s ease;
     }

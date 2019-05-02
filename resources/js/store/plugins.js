@@ -23,7 +23,7 @@ const cachePlugin = store => {
 const storagePlugin = store => {
     store.subscribe((mutation, state) => {
         if(mutation.type == 'addFavoriteBook' || mutation.type == 'removeFavoriteBook') {
-            Storage.set('favorites', state.favorites);
+            Storage.set('favorites', state.favorites.all());
         }
     })
 }
