@@ -4,7 +4,7 @@ services:
     image: apomarinov/htm
     container_name: app
     environment:
-      - BUILD=1
+      - INITIAL=1
     networks:
       - app
     ports:
