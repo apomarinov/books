@@ -18315,37 +18315,54 @@ function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterat
 /* harmony default export */ __webpack_exports__["default"] = ({
   storageKey: 'cache',
   cache: {},
-  getInterval: function getInterval() {
-    return new Date().toISOString().slice(0, 10);
+  interval: '',
+  daily: function daily() {
+    this.interval = new Date().toISOString().slice(0, 10);
+    return this;
   },
   getKey: function getKey(query) {
     return _typeof(query) == 'object' ? JSON.stringify(query) : query;
   },
   set: function set(query, data) {
+    if (!this.interval.length) {
+      console.error('Cache select an interval first');
+      return;
+    }
+
     if (!Object.keys(this.cache).length) {
       this.cache = _Storage__WEBPACK_IMPORTED_MODULE_0__["default"].get('cache') || this.cache;
     }
 
-    var interval = this.getInterval();
-
-    if (!this.cache.hasOwnProperty(interval)) {
-      this.cache[interval] = {};
+    if (!this.cache.hasOwnProperty(this.interval)) {
+      this.cache[this.interval] = {};
     }
 
-    if (!this.cache[interval].hasOwnProperty(this.getKey(query))) {
-      this.cache[interval][this.getKey(query)] = data;
+    var key = this.getKey(query);
+
+    if (!this.cache[this.interval].hasOwnProperty(key)) {
+      this.cache[this.interval][key] = data;
       _Storage__WEBPACK_IMPORTED_MODULE_0__["default"].set(this.storageKey, this.cache);
+    } else {
+      console.warn("Cache exists for key: ".concat(key));
     }
+
+    this.interval = '';
   },
   get: function get(query) {
+    if (!this.interval.length) {
+      console.error('Cache select an interval first');
+      return;
+    }
+
     if (!Object.keys(this.cache).length) {
       this.cache = _Storage__WEBPACK_IMPORTED_MODULE_0__["default"].get('cache') || this.cache;
     }
 
-    if (this.cache.hasOwnProperty(this.getInterval())) {
-      return this.cache[this.getInterval()][this.getKey(query)];
+    if (this.cache.hasOwnProperty(this.interval)) {
+      return this.cache[this.interval][this.getKey(query)];
     }
 
+    this.interval = '';
     return undefined;
   }
 });
@@ -18461,11 +18478,11 @@ var getters = {}; // actions
 var actions = {
   getAllBooks: function getAllBooks(_ref) {
     var commit = _ref.commit;
-    _classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].set({
+    _classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].daily().set({
       a: 123,
       maxResults: 123
     }, [1, 2, 3]);
-    console.log(_classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].get({
+    console.log(_classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].daily().get({
       a: 123,
       maxResults: 123
     }));

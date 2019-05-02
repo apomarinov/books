@@ -12,8 +12,8 @@ const getters = {}
 // actions
 const actions = {
     getAllBooks ({ commit }) {
-        Cache.set({a: 123, maxResults: 123}, [1, 2, 3]);
-        console.log(Cache.get({a: 123, maxResults: 123}));
+        Cache.daily().set({a: 123, maxResults: 123}, [1, 2, 3]);
+        console.log(Cache.daily().get({a: 123, maxResults: 123}));
         Book.all().then(response => {
             console.log(response);
         });
