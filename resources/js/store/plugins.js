@@ -25,7 +25,7 @@ const storagePlugin = store => {
     store.subscribe((mutation, state) => {
         if(mutation.type == 'addFavoriteBook' || mutation.type == 'removeFavoriteBook') {
             console.log(mutation.type, state.favorites);
-            Storage.set('update favorites', state.favorites);
+            Storage.set('favorites', state.favorites);
         }
     })
 }

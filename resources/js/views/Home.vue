@@ -1,5 +1,16 @@
 <template>
     <div>
+        <filters></filters>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
         <h1 class="font-normal text-3xl text-grey-darkest leading-none mb-8">Full Logo</h1>
 
         <div class="mb-10">
@@ -26,20 +37,39 @@
 </template>
 
 <script>
-    import { mapActions } from 'vuex';
+    import Filters from './Filters';
+    import { mapActions, mapGetters } from 'vuex';
 
     export default {
+        data() {
+          return {
+              filters: {}
+          }
+        },
+        components: {
+          Filters
+        },
+        computed: {
+            ...mapGetters(['books'])
+        },
         methods: {
             ...mapActions([
                 'getAllBooks',
-                'getBook',
                 'addFavoriteBook',
-                'removeFavoriteBook',
-                'getFavoriteBooks',
-            ])
+                'removeFavoriteBook'
+            ]),
+            filterBooks() {
+                let randomLetter = 'a';//String.fromCharCode(97 + Math.floor(Math.random() * 25));
+                let params = {
+                    q: randomLetter,
+                    maxResults: 20,
+                    ...this.filters
+                };
+                this.getAllBooks(params);
+            }
         },
         mounted() {
-            // this.getAllBooks();
+
             // this.getBook({
             //     id: "wNOoBAAAQBAJ",
             //     callback: book => {
@@ -47,9 +77,9 @@
             //     }
             // });
 
-            this.addFavoriteBook("wNOoBAAAQBAJ");
-            this.addFavoriteBook("o5JbAAAAcAAJ");
-            this.getFavoriteBooks();
+            // this.addFavoriteBook("wNOoBAAAQBAJ");
+            // this.addFavoriteBook("o5JbAAAAcAAJ");
+            // this.getFavoriteBooks();
 
             // this.removeFavoriteBook("o5JbAAAAcAAJ");
 

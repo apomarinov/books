@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import VueRouter from "vue-router";
-import routes from "./routes";
 import axios from 'axios';
+import buefy from 'buefy';
+
+import routes from "./routes";
 import store from './store/index';
 
 window.axios = axios;
@@ -9,6 +11,7 @@ window.axios = axios;
 Vue.config.productionTip = false;
 
 Vue.use(VueRouter);
+Vue.use(buefy);
 
 let app = new Vue({
     el: "#app",

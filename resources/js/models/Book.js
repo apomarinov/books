@@ -5,7 +5,11 @@ export default {
         return new Promise((resolve, reject) => {
             axios.get(this.apiUrl, {params: params})
                 .then(response => {
-                    resolve(response.data.items);
+                    let books = [];
+                    response.data.items.forEach(book => {
+                        books.push(this.prepareBook(book));
+                    });
+                    resolve(books);
                 })
                 .catch(error => {
                     reject(error);
@@ -16,11 +20,34 @@ export default {
         return new Promise((resolve, reject) => {
             axios.get(this.apiUrl + '/' + id)
                 .then(response => {
-                    resolve(response.data);
+                    resolve(this.prepareBook(response.data));
                 })
                 .catch(error => {
                     reject(error);
                 });
         });
+    },
+    prepareBook(data) {
+
+        let book = {
+            id: data.id,
+            title: data.volumeInfo.title,
+            image: data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail,
+            imageMedium: data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail,
+            rating: data.volumeInfo.averageRating,
+            publishedDate: data.volumeInfo.publishedDate,
+            description: data.volumeInfo.description,
+            pageCount: data.volumeInfo.printedPageCount,
+            identifiers: data.volumeInfo.industryIdentifiers
+        };
+
+        if(data.saleInfo.listPrice) {
+            book.price = data.saleInfo.listPrice.currencyCode + ' ' + data.saleInfo.listPrice.amount;
+        }
+        if(data.authors) {
+            book.author = data.volumeInfo.authors.join(' ');
+        }
+
+        return book;
     }
 }

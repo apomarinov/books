@@ -8,7 +8,7 @@ export default {
         },
         {
             path: "/",
-            component: require('./views/Logo').default
+            component: require('./views/Home').default
         }
     ]
 }
