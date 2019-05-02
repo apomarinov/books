@@ -30,12 +30,30 @@
 
     export default {
         methods: {
-            ...mapActions('books', [
-                'getAllBooks'
+            ...mapActions([
+                'getAllBooks',
+                'getBook',
+                'addFavoriteBook',
+                'removeFavoriteBook',
+                'getFavoriteBooks',
             ])
         },
         mounted() {
-            this.getAllBooks();
+            // this.getAllBooks();
+            // this.getBook({
+            //     id: "wNOoBAAAQBAJ",
+            //     callback: book => {
+            //         console.log(book);
+            //     }
+            // });
+
+            this.addFavoriteBook("wNOoBAAAQBAJ");
+            this.addFavoriteBook("o5JbAAAAcAAJ");
+            this.getFavoriteBooks();
+
+            // this.removeFavoriteBook("o5JbAAAAcAAJ");
+
+            // this.addFavoriteBook("68PaAAAAMAAJ");
         }
     }
 </script>

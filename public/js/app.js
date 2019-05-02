@@ -1797,9 +1797,19 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])('books', ['getAllBooks'])),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['getAllBooks', 'getBook', 'addFavoriteBook', 'removeFavoriteBook', 'getFavoriteBooks'])),
   mounted: function mounted() {
-    this.getAllBooks();
+    // this.getAllBooks();
+    // this.getBook({
+    //     id: "wNOoBAAAQBAJ",
+    //     callback: book => {
+    //         console.log(book);
+    //     }
+    // });
+    this.addFavoriteBook("wNOoBAAAQBAJ");
+    this.addFavoriteBook("o5JbAAAAcAAJ");
+    this.getFavoriteBooks(); // this.removeFavoriteBook("o5JbAAAAcAAJ");
+    // this.addFavoriteBook("68PaAAAAMAAJ");
   }
 });
 
@@ -18273,28 +18283,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _store_books__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/books */ "./resources/js/store/books.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _store_index__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./store/index */ "./resources/js/store/index.js");
 
 
 
 
 
-
-window.axios = axios__WEBPACK_IMPORTED_MODULE_4___default.a;
+window.axios = axios__WEBPACK_IMPORTED_MODULE_3___default.a;
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.config.productionTip = false;
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
-vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_3__["default"]);
 var app = new vue__WEBPACK_IMPORTED_MODULE_0___default.a({
   el: "#app",
   router: new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"](_routes__WEBPACK_IMPORTED_MODULE_2__["default"]),
-  store: new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
-    modules: {
-      books: _store_books__WEBPACK_IMPORTED_MODULE_5__["default"]
-    }
-  })
+  store: _store_index__WEBPACK_IMPORTED_MODULE_4__["default"]
 });
 
 /***/ }),
@@ -18402,27 +18405,27 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   apiUrl: 'https://www.googleapis.com/books/v1/volumes',
-  all: function all(query) {
+  find: function find(params) {
     var _this = this;
 
     return new Promise(function (resolve, reject) {
-      var randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
-
-      var params = _objectSpread({
-        q: randomLetter,
-        maxResults: 20
-      }, query);
-
       axios.get(_this.apiUrl, {
         params: params
       }).then(function (response) {
         resolve(response.data.items);
+      })["catch"](function (error) {
+        reject(error);
+      });
+    });
+  },
+  get: function get(id) {
+    var _this2 = this;
+
+    return new Promise(function (resolve, reject) {
+      axios.get(_this2.apiUrl + '/' + id).then(function (response) {
+        resolve(response.data);
       })["catch"](function (error) {
         reject(error);
       });
@@ -18455,65 +18458,233 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/store/books.js":
+/***/ "./resources/js/store/actions.js":
+/*!***************************************!*\
+  !*** ./resources/js/store/actions.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes_Cache__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/Cache */ "./resources/js/classes/Cache.js");
+/* harmony import */ var _models_Book__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/Book */ "./resources/js/models/Book.js");
+/* harmony import */ var _classes_Storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../classes/Storage */ "./resources/js/classes/Storage.js");
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  getAllBooks: function getAllBooks(context, params) {
+    var cachedBooks = _classes_Cache__WEBPACK_IMPORTED_MODULE_0__["default"].daily().get(params);
+
+    if (cachedBooks) {
+      console.log('cache has books');
+      context.commit('setBooks', {
+        result: cachedBooks
+      });
+    } else {
+      _models_Book__WEBPACK_IMPORTED_MODULE_1__["default"].find(params).then(function (books) {
+        context.commit('setBooks', {
+          query: params,
+          result: books
+        });
+      });
+    }
+  },
+  getBook: function getBook(context, _ref) {
+    var id = _ref.id,
+        callback = _ref.callback;
+    var cachedBook = _classes_Cache__WEBPACK_IMPORTED_MODULE_0__["default"].daily().get(id);
+
+    if (cachedBook) {
+      console.log('cache has book');
+      context.commit('setBook', {
+        result: cachedBook
+      });
+
+      if (callback) {
+        callback(cachedBook);
+      }
+    } else {
+      _models_Book__WEBPACK_IMPORTED_MODULE_1__["default"].get(id).then(function (book) {
+        if (callback) {
+          callback(book);
+        }
+
+        context.commit('setBook', {
+          query: id,
+          result: book
+        });
+      });
+    }
+  },
+  addFavoriteBook: function addFavoriteBook(context, id) {
+    context.commit('addFavoriteBook', id);
+  },
+  removeFavoriteBook: function removeFavoriteBook(context, id) {
+    context.commit('removeFavoriteBook', id);
+  },
+  getFavoriteBooks: function getFavoriteBooks(context) {
+    var favoriteBookIds = _classes_Storage__WEBPACK_IMPORTED_MODULE_2__["default"].get('favorites');
+
+    if (favoriteBookIds) {
+      var books = [];
+      favoriteBookIds.forEach(function (id) {
+        context.dispatch('getBook', {
+          id: id,
+          callback: function callback(book) {
+            books.push(book);
+
+            if (books.length == favoriteBookIds.length) {
+              context.commit('setBooks', {
+                result: books
+              });
+            }
+          }
+        });
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/getters.js":
+/*!***************************************!*\
+  !*** ./resources/js/store/getters.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+  books: function books(state) {
+    return state.books;
+  },
+  book: function book(state) {
+    return state.book;
+  }
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/index.js":
 /*!*************************************!*\
-  !*** ./resources/js/store/books.js ***!
+  !*** ./resources/js/store/index.js ***!
   \*************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _models_Book__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/Book */ "./resources/js/models/Book.js");
-/* harmony import */ var _classes_Cache__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/Cache */ "./resources/js/classes/Cache.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _plugins__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./plugins */ "./resources/js/store/plugins.js");
+/* harmony import */ var _actions__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./actions */ "./resources/js/store/actions.js");
+/* harmony import */ var _mutations__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mutations */ "./resources/js/store/mutations.js");
+/* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./getters */ "./resources/js/store/getters.js");
 
- // initial state
 
-var state = {
-  all: [] // getters
 
-};
-var getters = {}; // actions
 
-var actions = {
-  getAllBooks: function getAllBooks(_ref) {
-    var commit = _ref.commit;
-    _classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].daily().set({
-      a: 123,
-      maxResults: 123
-    }, [1, 2, 3]);
-    console.log(_classes_Cache__WEBPACK_IMPORTED_MODULE_1__["default"].daily().get({
-      a: 123,
-      maxResults: 123
-    }));
-    _models_Book__WEBPACK_IMPORTED_MODULE_0__["default"].all().then(function (response) {
-      console.log(response);
-    }); // console.log();
-    // shop.getProducts(products => {
-    //     commit('setProducts', products)
-    // })
-  }
-}; // mutations
 
-var mutations = {
-  setProducts: function setProducts(state, products) {
-    state.all = products;
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__["default"]);
+/* harmony default export */ __webpack_exports__["default"] = (new vuex__WEBPACK_IMPORTED_MODULE_1__["default"].Store({
+  state: {
+    books: [],
+    favorites: [],
+    book: {}
   },
-  decrementProductInventory: function decrementProductInventory(state, _ref2) {
-    var id = _ref2.id;
-    var product = state.all.find(function (product) {
-      return product.id === id;
-    });
-    product.inventory--;
-  }
-};
+  getters: _getters__WEBPACK_IMPORTED_MODULE_5__["default"],
+  actions: _actions__WEBPACK_IMPORTED_MODULE_3__["default"],
+  mutations: _mutations__WEBPACK_IMPORTED_MODULE_4__["default"],
+  plugins: _plugins__WEBPACK_IMPORTED_MODULE_2__["default"]
+}));
+
+/***/ }),
+
+/***/ "./resources/js/store/mutations.js":
+/*!*****************************************!*\
+  !*** ./resources/js/store/mutations.js ***!
+  \*****************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
-  namespaced: true,
-  state: state,
-  getters: getters,
-  actions: actions,
-  mutations: mutations
+  setBooks: function setBooks(state, data) {
+    state.books = data.result;
+  },
+  setBook: function setBook(state, data) {
+    state.book = data.result;
+  },
+  addFavoriteBook: function addFavoriteBook(state, id) {
+    if (state.favorites.indexOf(id) == -1) {
+      state.favorites.push(id);
+    }
+  },
+  removeFavoriteBook: function removeFavoriteBook(state, id) {
+    var bookIndex = state.favorites.indexOf(id);
+
+    if (bookIndex >= 0) {
+      state.favorites.splice(bookIndex, 1);
+    }
+  }
 });
+
+/***/ }),
+
+/***/ "./resources/js/store/plugins.js":
+/*!***************************************!*\
+  !*** ./resources/js/store/plugins.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _classes_Cache__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/Cache */ "./resources/js/classes/Cache.js");
+/* harmony import */ var _classes_Storage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../classes/Storage */ "./resources/js/classes/Storage.js");
+
+
+
+var cachePlugin = function cachePlugin(store) {
+  store.subscribe(function (mutation, state) {
+    var cacheData = undefined;
+
+    if (mutation.payload.query) {
+      switch (mutation.type) {
+        case 'setBooks':
+          cacheData = state.books;
+          break;
+
+        case 'setBook':
+          cacheData = state.book;
+          break;
+      }
+
+      if (cacheData) {
+        console.log('Cache ' + mutation.type, mutation.payload, state);
+        _classes_Cache__WEBPACK_IMPORTED_MODULE_0__["default"].daily().set(mutation.payload.query, cacheData);
+      }
+    }
+  });
+};
+
+var storagePlugin = function storagePlugin(store) {
+  store.subscribe(function (mutation, state) {
+    if (mutation.type == 'addFavoriteBook' || mutation.type == 'removeFavoriteBook') {
+      console.log(mutation.type, state.favorites);
+      _classes_Storage__WEBPACK_IMPORTED_MODULE_1__["default"].set('update favorites', state.favorites);
+    }
+  });
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ([cachePlugin, storagePlugin]);
 
 /***/ }),
 
