@@ -1,3 +1,5 @@
+import Storage from '../classes/Storage';
+
 export default {
     apiUrl: 'https://www.googleapis.com/books/v1/volumes',
 
@@ -34,18 +36,17 @@ export default {
             title: data.volumeInfo.title,
             image: data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail,
             imageMedium: data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail,
+            authors: data.volumeInfo.authors || [],
             rating: data.volumeInfo.averageRating,
             publishedDate: data.volumeInfo.publishedDate,
             description: data.volumeInfo.description,
             pageCount: data.volumeInfo.printedPageCount,
-            identifiers: data.volumeInfo.industryIdentifiers
+            identifiers: data.volumeInfo.industryIdentifiers,
+            isFavorite: Storage.get('favorites').indexOf(data.id) >= 0
         };
 
         if(data.saleInfo.listPrice) {
             book.price = data.saleInfo.listPrice.currencyCode + ' ' + data.saleInfo.listPrice.amount;
-        }
-        if(data.authors) {
-            book.author = data.volumeInfo.authors.join(' ');
         }
 
         return book;

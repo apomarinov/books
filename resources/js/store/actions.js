@@ -31,11 +31,12 @@ export default {
             });
         }
     },
-    addFavoriteBook(context, id) {
-        context.commit('addFavoriteBook', id);
-    },
-    removeFavoriteBook(context, id) {
-        context.commit('removeFavoriteBook', id);
+    toggleFavoriteBook(context, id) {
+        if(Storage.get('favorites').indexOf(id) >= 0) {
+            context.commit('removeFavoriteBook', id);
+        } else {
+            context.commit('addFavoriteBook', id);
+        }
     },
     getFavoriteBooks(context) {
         let favoriteBookIds = Storage.get('favorites');

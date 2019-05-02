@@ -1,6 +1,7 @@
 <template>
     <div>
-        <filters></filters>
+        <filters class="pb-10"></filters>
+        <book-item :book="book"></book-item>
         <br>
         <br>
         <br>
@@ -21,7 +22,7 @@
                 <p>Original logo on <strong>white</strong> background.</p>
 
                 <a href="/images/logo.svg" class="border border-gray-light rounded-full px-5 py-2 text-black font-bold text-xs">logo.svg</a>
-            </div>
+    ok-i    </div>
         </div>
         <div>
             <picture style="height: 382px;" class="shadow rounded-lg flex mb-6 items-center justify-center bg-blue">
@@ -38,16 +39,17 @@
 
 <script>
     import Filters from './Filters';
+    import BookItem from './BookItem';
     import { mapActions, mapGetters } from 'vuex';
 
     export default {
         data() {
           return {
-              filters: {}
+              book: {}
           }
         },
         components: {
-          Filters
+          Filters, BookItem
         },
         computed: {
             ...mapGetters(['books'])
@@ -55,6 +57,7 @@
         methods: {
             ...mapActions([
                 'getAllBooks',
+                'getBook',
                 'addFavoriteBook',
                 'removeFavoriteBook'
             ]),
@@ -68,14 +71,13 @@
                 this.getAllBooks(params);
             }
         },
-        mounted() {
-
-            // this.getBook({
-            //     id: "wNOoBAAAQBAJ",
-            //     callback: book => {
-            //         console.log(book);
-            //     }
-            // });
+        created() {
+            this.getBook({
+                id: "QFiZGQmvRUQC",
+                callback: book => {
+                    this.book = book;
+                }
+            });
 
             // this.addFavoriteBook("wNOoBAAAQBAJ");
             // this.addFavoriteBook("o5JbAAAAcAAJ");
