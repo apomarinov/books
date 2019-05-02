@@ -3,6 +3,8 @@ services:
   app:
     image: apomarinov/htm
     container_name: app
+    environment:
+      - BUILD=1
     networks:
       - app
     ports:
@@ -14,24 +16,15 @@ services:
     container_name: db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
-    environment: 
+    environment:
       - MYSQL_ROOT_PASSWORD=secret_pass
       - MYSQL_DATABASE=db
-    networks: 
+    networks:
       - app
   cache:
     image: redis
     container_name: cache
     networks:
       - app
-  adminer:
-      image: apomarinov/backend
-      container_name: adminer
-      networks:
-          - app
-      ports:
-          - "90:80"
-      volumes:
-          - ../../../credoweb/www/adminer:/var/www/html/public
 networks:
   app:
