@@ -12,7 +12,7 @@ export default {
     },
     addFavoriteBook(state, id) {
         if(!state.favorites.length) {
-            state.favorites = Storage.get('favorites');
+            state.favorites = Storage.get('favorites') || [];
         }
         if(state.favorites.indexOf(id) == -1) {
             state.favorites.push(id);

@@ -14,7 +14,6 @@ const cachePlugin = store => {
                     break;
             }
             if(cacheData) {
-                console.log('Cache ' + mutation.type, mutation.payload, state);
                 Cache.daily().set(mutation.payload.query, cacheData);
             }
         }

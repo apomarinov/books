@@ -6,8 +6,8 @@
 </template>
 
 <script>
-    import Filters from './Filters';
-    import BookList from './BookList';
+    import Filters from '../components/Filters';
+    import BookList from '../components/BookList';
 
     export default {
         components: {

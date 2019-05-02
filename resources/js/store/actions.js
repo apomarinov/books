@@ -33,7 +33,7 @@ export default {
         }
     },
     toggleFavoriteBook(context, id) {
-        if(Storage.get('favorites').indexOf(id) >= 0) {
+        if((Storage.get('favorites') || []).indexOf(id) >= 0) {
             context.commit('removeFavoriteBook', id);
         } else {
             context.commit('addFavoriteBook', id);
@@ -55,6 +55,8 @@ export default {
                     }
                 });
             });
+        } else {
+            context.commit('setBooks', {result: []});
         }
     }
 }

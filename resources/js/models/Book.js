@@ -39,7 +39,7 @@ export default {
             description: data.volumeInfo.description,
             pageCount: data.volumeInfo.printedPageCount,
             identifiers: data.volumeInfo.industryIdentifiers,
-            isFavorite: Storage.get('favorites').indexOf(data.id) >= 0
+            isFavorite: (Storage.get('favorites') || []).indexOf(data.id) >= 0
         };
 
         if(data.volumeInfo.imageLinks) {

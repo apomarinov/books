@@ -115,7 +115,7 @@
                 ],
                 languageList: LanguageCodes,
                 lang: '',
-                enabled: true
+                enabled: false
             }
         },
         methods: {
