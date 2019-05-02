@@ -131,7 +131,7 @@
                         maxResults: 20,
                         filter:[]
                     };
-                    console.log(this.filters.bookType, this.filters.priceType);
+
                     if(this.filters.query.length) {
                         params.q = this.filters.query;
                     }
