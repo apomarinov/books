@@ -1781,22 +1781,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['bookId'],
-  data: function data() {
-    return {
-      isFave: undefined
-    };
-  },
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['toggleFavoriteBook']), {
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['toggleFavoriteBook', 'getFavoriteBooks']), {
     toggleFavorite: function toggleFavorite() {
-      this.isFave = !this.isFave;
       this.toggleFavoriteBook(this.bookId);
+
+      if (this.$route.fullPath == '/favorites' && !this.isFavorite()) {
+        this.getFavoriteBooks();
+
+        if (!this.$store.state.favorites.all().length) {
+          this.$router.push({
+            name: 'home'
+          });
+        }
+      }
     },
     isFavorite: function isFavorite() {
-      if (this.isFave === undefined) {
-        this.isFave = this.$store.state.favorites.all().indexOf(this.bookId) >= 0;
-      }
-
-      return this.isFave;
+      return this.$store.state.favorites.all().indexOf(this.bookId) >= 0;
     }
   })
 });
@@ -1924,8 +1924,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.enabled = true;
       return _.chunk(this.books, 4);
     }
-  }),
-  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['clearBooks']))
+  })
 });
 
 /***/ }),
@@ -1985,6 +1984,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _language_codes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../language-codes */ "./resources/js/language-codes.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_2__);
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -2056,6 +2057,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2099,43 +2101,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(['getAllBooks']), {
     filterBooks: function filterBooks() {
-      var randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
-      var params = {
-        q: randomLetter,
-        maxResults: 20,
-        filter: []
-      };
+      var _this = this;
 
-      if (this.filters.query.length) {
-        params.q = this.filters.query;
-      }
+      vue__WEBPACK_IMPORTED_MODULE_2___default.a.nextTick(function () {
+        var randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
+        var params = {
+          q: randomLetter,
+          maxResults: 20,
+          filter: []
+        };
+        console.log(_this.filters.bookType, _this.filters.priceType);
 
-      if (this.filters.bookType) {
-        params.filter.push(this.filters.bookType.value);
-      }
+        if (_this.filters.query.length) {
+          params.q = _this.filters.query;
+        }
 
-      if (this.filters.priceType) {
-        params.filter.push(this.filters.priceType.value);
-      }
+        if (_this.filters.bookType) {
+          params.filter.push(_this.filters.bookType.value);
+        }
 
-      if (this.filters.language) {
-        params.langRestrict = this.filters.language.value;
-      }
+        if (_this.filters.priceType) {
+          params.filter.push(_this.filters.priceType.value);
+        }
 
-      if (this.filters.printType) {
-        params.printType = this.filters.printType.value;
-      }
+        if (_this.filters.language) {
+          params.langRestrict = _this.filters.language.value;
+        }
 
-      this.getAllBooks(params);
+        if (_this.filters.printType) {
+          params.printType = _this.filters.printType.value;
+        }
+
+        _this.getAllBooks(params);
+      });
     },
     dropdownTitle: function dropdownTitle(option) {
       return option ? ': ' + option.label : '';
     },
     filteredLanguageList: function filteredLanguageList() {
-      var _this = this;
+      var _this2 = this;
 
       return this.languageList.filter(function (option) {
-        return option.label.toString().toLowerCase().indexOf(_this.lang.toLowerCase()) >= 0;
+        return option.label.toString().toLowerCase().indexOf(_this2.lang.toLowerCase()) >= 0;
       });
     }
   }),
@@ -2162,6 +2169,9 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
 //
 //
 //
@@ -35532,17 +35542,6 @@ var render = function() {
               [
                 _c("b-input", {
                   attrs: { placeholder: "Search...", expanded: "" },
-                  on: {
-                    keyup: function($event) {
-                      if (
-                        !$event.type.indexOf("key") &&
-                        _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                      ) {
-                        return null
-                      }
-                      return _vm.filterBooks($event)
-                    }
-                  },
                   model: {
                     value: _vm.filters.query,
                     callback: function($$v) {
@@ -35619,7 +35618,8 @@ var render = function() {
                             },
                             on: {
                               select: function(option) {
-                                return (_vm.filters.language = option)
+                                _vm.filters.language = option
+                                _vm.filterBooks()
                               }
                             },
                             model: {
@@ -35648,6 +35648,7 @@ var render = function() {
                   "b-dropdown",
                   {
                     attrs: { "aria-role": "list" },
+                    on: { change: _vm.filterBooks },
                     model: {
                       value: _vm.filters.bookType,
                       callback: function($$v) {
@@ -35701,6 +35702,7 @@ var render = function() {
                   "b-dropdown",
                   {
                     attrs: { "aria-role": "list" },
+                    on: { change: _vm.filterBooks },
                     model: {
                       value: _vm.filters.priceType,
                       callback: function($$v) {
@@ -35754,6 +35756,7 @@ var render = function() {
                   "b-dropdown",
                   {
                     attrs: { "aria-role": "list" },
+                    on: { change: _vm.filterBooks },
                     model: {
                       value: _vm.filters.printType,
                       callback: function($$v) {
@@ -35874,7 +35877,20 @@ var render = function() {
               { staticClass: "level-item" },
               [_c("book-fave-button", { attrs: { "book-id": _vm.book.id } })],
               1
-            )
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "level-item" }, [
+              _vm.book.buyLink
+                ? _c(
+                    "a",
+                    {
+                      staticClass: "button is-warning is-rounded",
+                      attrs: { href: _vm.book.buyLink, target: "_blank" }
+                    },
+                    [_vm._v("Buy")]
+                  )
+                : _vm._e()
+            ])
           ])
         ])
       ]),
@@ -53378,6 +53394,10 @@ __webpack_require__.r(__webpack_exports__);
       isFavorite: (_classes_Storage__WEBPACK_IMPORTED_MODULE_0__["default"].get('favorites') || []).indexOf(data.id) >= 0
     };
 
+    if (data.saleInfo) {
+      book.buyLink = data.saleInfo.buyLink;
+    }
+
     if (data.volumeInfo.imageLinks) {
       book.image = data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail;
       book.imageMedium = data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail;
@@ -53410,6 +53430,7 @@ __webpack_require__.r(__webpack_exports__);
     component: __webpack_require__(/*! ./views/NotFound */ "./resources/js/views/NotFound.vue")["default"]
   }, {
     path: "/",
+    name: 'home',
     component: __webpack_require__(/*! ./views/Home */ "./resources/js/views/Home.vue")["default"]
   }, {
     path: "/favorites",
@@ -53434,8 +53455,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _classes_Cache__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/Cache */ "./resources/js/classes/Cache.js");
 /* harmony import */ var _models_Book__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../models/Book */ "./resources/js/models/Book.js");
-/* harmony import */ var _classes_Storage__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../classes/Storage */ "./resources/js/classes/Storage.js");
-
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -53485,16 +53504,16 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   toggleFavoriteBook: function toggleFavoriteBook(context, id) {
-    if ((_classes_Storage__WEBPACK_IMPORTED_MODULE_2__["default"].get('favorites') || []).indexOf(id) >= 0) {
+    if (context.state.favorites.all().indexOf(id) >= 0) {
       context.commit('removeFavoriteBook', id);
     } else {
       context.commit('addFavoriteBook', id);
     }
   },
   getFavoriteBooks: function getFavoriteBooks(context) {
-    var favoriteBookIds = _classes_Storage__WEBPACK_IMPORTED_MODULE_2__["default"].get('favorites');
+    var favoriteBookIds = context.state.favorites.all();
 
-    if (favoriteBookIds) {
+    if (favoriteBookIds.length) {
       var books = [];
       favoriteBookIds.forEach(function (id) {
         context.dispatch('getBook', {
@@ -53569,9 +53588,9 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
   state: {
     books: [],
     favorites: {
-      _favorites: [],
+      _favorites: undefined,
       all: function all() {
-        if (!this._favorites.length) {
+        if (this._favorites == undefined) {
           this._favorites = _classes_Storage__WEBPACK_IMPORTED_MODULE_6__["default"].get('favorites') || [];
         }
 
@@ -53608,8 +53627,6 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _classes_Storage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../classes/Storage */ "./resources/js/classes/Storage.js");
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   setBooks: function setBooks(state, data) {
     state.books = data.result;

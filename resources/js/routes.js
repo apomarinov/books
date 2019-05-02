@@ -8,6 +8,7 @@ export default {
         },
         {
             path: "/",
+            name: 'home',
             component: require('./views/Home').default
         },
         {

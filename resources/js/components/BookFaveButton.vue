@@ -15,24 +15,24 @@
         props: [
             'bookId'
         ],
-        data() {
-            return {
-                isFave: undefined
-            }
-        },
         methods: {
             ...mapActions([
-                'toggleFavoriteBook'
+                'toggleFavoriteBook',
+                'getFavoriteBooks'
             ]),
             toggleFavorite() {
-                this.isFave = !this.isFave;
                 this.toggleFavoriteBook(this.bookId);
+
+                if(this.$route.fullPath == '/favorites' && !this.isFavorite()) {
+                    this.getFavoriteBooks();
+
+                    if(!this.$store.state.favorites.all().length) {
+                        this.$router.push({ name: 'home'});
+                    }
+                }
             },
             isFavorite() {
-                if(this.isFave === undefined) {
-                    this.isFave = this.$store.state.favorites.all().indexOf(this.bookId) >= 0;
-                }
-                return this.isFave;
+                return this.$store.state.favorites.all().indexOf(this.bookId) >= 0;
             }
         },
     }

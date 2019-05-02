@@ -4,7 +4,7 @@
             <div class="column"></div>
             <div class="column is-5">
                 <b-field grouped>
-                    <b-input v-model="filters.query" placeholder="Search..." expanded @keyup.enter="filterBooks"></b-input>
+                    <b-input v-model="filters.query" placeholder="Search..." expanded></b-input>
                     <p class="control">
                         <button class="button is-info" @click="filterBooks">Search</button>
                     </p>
@@ -28,12 +28,12 @@
                             :data="filteredLanguageList()"
                             placeholder="Choose Language..."
                             icon="magnify"
-                            @select="option => filters.language = option">
+                            @select="option => { filters.language = option; filterBooks(); }">
                             <template slot="empty">No results found</template>
                         </b-autocomplete>
                     </b-field>
                 </div>
-                <b-dropdown aria-role="list" v-model="filters.bookType">
+                <b-dropdown aria-role="list" v-model="filters.bookType" @change="filterBooks">
                     <button class="button" slot="trigger">
                         <span>Type{{ dropdownTitle(filters.bookType) }}</span>
                         <b-icon icon="menu-down"></b-icon>
@@ -42,7 +42,7 @@
                     <b-dropdown-item aria-role="listitem">None</b-dropdown-item>
                     <b-dropdown-item v-for="type in bookTypes" :key="type.value" aria-role="listitem" :value="type">{{ type.label }}</b-dropdown-item>
                 </b-dropdown>
-                <b-dropdown aria-role="list" v-model="filters.priceType">
+                <b-dropdown aria-role="list" v-model="filters.priceType" @change="filterBooks">
                     <button class="button" slot="trigger">
                         <span>Price{{ dropdownTitle(filters.priceType) }}</span>
                         <b-icon icon="menu-down"></b-icon>
@@ -51,7 +51,7 @@
                     <b-dropdown-item aria-role="listitem">None</b-dropdown-item>
                     <b-dropdown-item v-for="type in priceTypes" :key="type.value" aria-role="listitem" :value="type">{{ type.label }}</b-dropdown-item>
                 </b-dropdown>
-                <b-dropdown aria-role="list" v-model="filters.printType">
+                <b-dropdown aria-role="list" v-model="filters.printType" @change="filterBooks">
                     <button class="button" slot="trigger">
                         <span>Print Type{{ dropdownTitle(filters.printType) }}</span>
                         <b-icon icon="menu-down"></b-icon>
@@ -68,6 +68,7 @@
 <script>
     import { mapActions } from 'vuex';
     import LanguageCodes from '../language-codes';
+    import Vue from 'vue';
 
     export default {
         data() {
@@ -123,30 +124,32 @@
                 'getAllBooks'
             ]),
             filterBooks() {
-                let randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
-                let params = {
-                    q: randomLetter,
-                    maxResults: 20,
-                    filter:[]
-                };
+                Vue.nextTick(() => {
+                    let randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
+                    let params = {
+                        q: randomLetter,
+                        maxResults: 20,
+                        filter:[]
+                    };
+                    console.log(this.filters.bookType, this.filters.priceType);
+                    if(this.filters.query.length) {
+                        params.q = this.filters.query;
+                    }
+                    if(this.filters.bookType) {
+                        params.filter.push(this.filters.bookType.value);
+                    }
+                    if(this.filters.priceType) {
+                        params.filter.push(this.filters.priceType.value);
+                    }
+                    if(this.filters.language) {
+                        params.langRestrict = this.filters.language.value;
+                    }
+                    if(this.filters.printType) {
+                        params.printType = this.filters.printType.value;
+                    }
 
-                if(this.filters.query.length) {
-                    params.q = this.filters.query;
-                }
-                if(this.filters.bookType) {
-                    params.filter.push(this.filters.bookType.value);
-                }
-                if(this.filters.priceType) {
-                    params.filter.push(this.filters.priceType.value);
-                }
-                if(this.filters.language) {
-                    params.langRestrict = this.filters.language.value;
-                }
-                if(this.filters.printType) {
-                    params.printType = this.filters.printType.value;
-                }
-
-                this.getAllBooks(params);
+                    this.getAllBooks(params);
+                });
             },
             dropdownTitle(option) {
                 return option ? ': ' + option.label : '';

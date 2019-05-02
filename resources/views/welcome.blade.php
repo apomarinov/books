@@ -20,7 +20,7 @@
             <div class="column"></div>
             <div class="column is-1">
                 <header class="text-4xl font-bold">
-                    <h1>Books</h1>
+                    <h1>Library</h1>
                 </header>
                 <aside class="pt-8">
                     <section class="ml-4">
@@ -28,7 +28,7 @@
                             <li class="text-sm leading-loose">
                                 <router-link class="text-black" to="/" exact>Home</router-link>
                             </li>
-                            <li class="text-sm leading-loose">
+                            <li class="text-sm leading-loose" v-if="this.$store.state.favorites.all().length">
                                 <router-link class="text-black" to="/favorites">Favorites</router-link>
                             </li>
                         </ul>

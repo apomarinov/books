@@ -1,6 +1,5 @@
 import Cache from "../classes/Cache";
 import Book from "../models/Book";
-import Storage from "../classes/Storage";
 
 export default {
     getAllBooks (context, params) {
@@ -33,15 +32,15 @@ export default {
         }
     },
     toggleFavoriteBook(context, id) {
-        if((Storage.get('favorites') || []).indexOf(id) >= 0) {
+        if(context.state.favorites.all().indexOf(id) >= 0) {
             context.commit('removeFavoriteBook', id);
         } else {
             context.commit('addFavoriteBook', id);
         }
     },
     getFavoriteBooks(context) {
-        let favoriteBookIds = Storage.get('favorites');
-        if(favoriteBookIds) {
+        let favoriteBookIds = context.state.favorites.all();
+        if(favoriteBookIds.length) {
             let books = [];
             favoriteBookIds.forEach(id => {
                 context.dispatch('getBook', {

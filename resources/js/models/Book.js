@@ -42,6 +42,9 @@ export default {
             isFavorite: (Storage.get('favorites') || []).indexOf(data.id) >= 0
         };
 
+        if(data.saleInfo) {
+            book.buyLink = data.saleInfo.buyLink;
+        }
         if(data.volumeInfo.imageLinks) {
             book.image = data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail;
             book.imageMedium = data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail;

@@ -13,9 +13,9 @@ export default new Vuex.Store({
     state: {
         books: [],
         favorites: {
-            _favorites: [],
+            _favorites: undefined,
             all() {
-                if(!this._favorites.length) {
+                if(this._favorites == undefined) {
                     this._favorites = Storage.get('favorites') || [];
                 }
 

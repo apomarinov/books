@@ -17,6 +17,9 @@
                         <div class="level-item">
                             <book-fave-button :book-id="book.id"></book-fave-button>
                         </div>
+                        <div class="level-item">
+                            <a v-if="book.buyLink" :href="book.buyLink" target="_blank" class="button is-warning is-rounded">Buy</a>
+                        </div>
                     </div>
                 </div>
             </div>

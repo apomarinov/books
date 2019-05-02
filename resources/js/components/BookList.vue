@@ -44,9 +44,6 @@
                 this.enabled = true;
                 return _.chunk(this.books, 4);
             }
-        },
-        methods: {
-            ...mapActions(['clearBooks'])
         }
     }
 </script>
