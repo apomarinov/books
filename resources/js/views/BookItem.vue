@@ -1,12 +1,15 @@
 <template>
-    <div style="height: 380px; width: 260px" class="shadow rounded-lg p-4 flex flex-col">
+    <div style="height: 380px; width: 260px" class="shadow rounded-lg p-4 flex flex-col bg-grey-light">
         <div class="flex-1">
             <div class="flex items-center justify-center pb-2 cursor-pointer">
-                <img @click="viewBook(book.id)" style="height: 200px" class="rounded-lg" :src="book.image" :alt="book.title">
+                <div class="cover pt-24" v-if="!book.image">
+                    <i class="fas fa-images" ></i>
+                </div>
+                <img @click="viewBook(book.id)" v-if="book.image" class="cover rounded-lg" :src="book.image" :alt="book.title">
             </div>
             <p class="has-text-centered">{{ book.price }}</p>
-            <p class="has-text-centered overflow-hidden">{{ book.title | truncate(55) }}</p>
-            <p v-if="book.authors" class="has-text-centered"><strong>{{ book.authors[0] }}</strong></p>
+            <p class="has-text-centered overflow-hidden">{{ book.title | truncate(45) }}</p>
+            <p v-if="book.authors" class="has-text-centered"><strong>{{ book.authors[0] | truncate(45) }}</strong></p>
         </div>
         <div class="pt-5 pin-b h-12">
             <rating class="pointer-events-none" :items="rating" :value="Math.floor(book.rating)"></rating>
@@ -21,6 +24,10 @@
     .fave {
         margin-top: -60px;
         margin-left: 200px;
+    }
+
+    .cover {
+        height: 200px;
     }
 
     .is-fave {
@@ -80,9 +87,6 @@
                 this.book.isFavorite = !this.book.isFavorite;
                 this.toggleFavoriteBook(this.book.id);
             }
-        },
-        mounted() {
-            console.log(this.book);
         }
     }
 </script>

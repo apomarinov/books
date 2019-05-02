@@ -30,12 +30,9 @@ export default {
         });
     },
     prepareBook(data) {
-
         let book = {
             id: data.id,
             title: data.volumeInfo.title,
-            image: data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail,
-            imageMedium: data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail,
             authors: data.volumeInfo.authors || [],
             rating: data.volumeInfo.averageRating,
             publishedDate: data.volumeInfo.publishedDate,
@@ -45,6 +42,10 @@ export default {
             isFavorite: Storage.get('favorites').indexOf(data.id) >= 0
         };
 
+        if(data.volumeInfo.imageLinks) {
+            book.image = data.volumeInfo.imageLinks.small || data.volumeInfo.imageLinks.thumbnail;
+            book.imageMedium = data.volumeInfo.imageLinks.medium || data.volumeInfo.imageLinks.thumbnail;
+        }
         if(data.saleInfo.listPrice) {
             book.price = data.saleInfo.listPrice.currencyCode + ' ' + data.saleInfo.listPrice.amount;
         }

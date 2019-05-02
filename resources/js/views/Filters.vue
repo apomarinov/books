@@ -123,7 +123,7 @@
                 'getAllBooks'
             ]),
             filterBooks() {
-                let randomLetter = 'a';//String.fromCharCode(97 + Math.floor(Math.random() * 25));
+                let randomLetter = String.fromCharCode(97 + Math.floor(Math.random() * 25));
                 let params = {
                     q: randomLetter,
                     maxResults: 20,

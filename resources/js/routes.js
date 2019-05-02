@@ -9,6 +9,10 @@ export default {
         {
             path: "/",
             component: require('./views/Home').default
+        },
+        {
+            path: "/favorites",
+            component: require('./views/Favorites').default
         }
     ]
 }

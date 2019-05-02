@@ -6,7 +6,6 @@ export default {
     getAllBooks (context, params) {
         let cachedBooks = Cache.daily().get(params);
         if(cachedBooks) {
-            console.log('cache has books');
             context.commit('setBooks', { result: cachedBooks});
         } else {
             Book.find(params).then(books => {
@@ -14,10 +13,12 @@ export default {
             });
         }
     },
+    clearBooks (context) {
+        context.commit('clearBooks');
+    },
     getBook (context, { id, callback }) {
         let cachedBook = Cache.daily().get(id);
         if(cachedBook) {
-            console.log('cache has book');
             context.commit('setBook', { result: cachedBook});
             if(callback) {
                 callback(cachedBook);

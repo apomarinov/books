@@ -4,7 +4,7 @@ import Storage from '../classes/Storage';
 const cachePlugin = store => {
     store.subscribe((mutation, state) => {
         let cacheData = undefined;
-        if(mutation.payload.query) {
+        if(mutation.payload && mutation.payload.query) {
             switch (mutation.type) {
                 case 'setBooks':
                     cacheData = state.books;
@@ -24,7 +24,6 @@ const cachePlugin = store => {
 const storagePlugin = store => {
     store.subscribe((mutation, state) => {
         if(mutation.type == 'addFavoriteBook' || mutation.type == 'removeFavoriteBook') {
-            console.log(mutation.type, state.favorites);
             Storage.set('favorites', state.favorites);
         }
     })
