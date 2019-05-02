@@ -8,6 +8,7 @@
 
 - Clone this repo
 - Run `docker-compose up -d`
+- View installation process `docker logs -f app` and wait for DONE message
 - Go to [localhost](http://localhost)
 
 If you see Laravels error ***No Application Encryption Key Has Been Specified***
